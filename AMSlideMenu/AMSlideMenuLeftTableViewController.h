@@ -28,7 +28,7 @@
 
 @class AMSlideMenuMainViewController;
 
-@interface AMSlideMenuLeftTableViewController : UITableViewController
+@interface AMSlideMenuLeftTableViewController : UIViewController<UITableViewDelegate>
 
 @property (weak, nonatomic) AMSlideMenuMainViewController *mainVC;
 

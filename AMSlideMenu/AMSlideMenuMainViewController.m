@@ -189,12 +189,12 @@ static NSMutableArray *allInstances;
 
 - (CGFloat) openAnimationDuration
 {
-    return 0.25f;
+    return 0.35f;
 }
 
 - (CGFloat) closeAnimationDuration
 {
-    return 0.25f;
+    return 0.35f;
 }
 
 - (UIViewAnimationOptions) openAnimationCurve
@@ -341,16 +341,6 @@ static NSMutableArray *allInstances;
 {
     CGPoint velocity = [self.panGesture velocityInView:self.panGesture.view];
     BOOL isHorizontalGesture = fabs(velocity.y) < fabs(velocity.x);
-    
-    if (isHorizontalGesture) {
-        if (velocity.x > 0 && self.rightPanDisabled) {
-            return NO;
-        }
-        
-        if (velocity.x < 0 && self.leftPanDisabled) {
-            return NO;
-        }
-    }
     
     return isHorizontalGesture;
 }
@@ -544,9 +534,9 @@ static NSMutableArray *allInstances;
         self.rightMenu.view.hidden = YES;
     }
     
-    // Disabling scrollsToTop for menu's tableviews
-    self.leftMenu.tableView.scrollsToTop = NO;
-    self.rightMenu.tableView.scrollsToTop = NO;
+//    // Disabling scrollsToTop for menu's tableviews
+//    self.leftMenu.tableView.scrollsToTop = NO;
+//    self.rightMenu.tableView.scrollsToTop = NO;
 
 }
 
@@ -806,7 +796,7 @@ static NSMutableArray *allInstances;
             if (!UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
                 CGRect frame = self.currentActiveNVC.view.frame;
                 
-                if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad || UIInterfaceOrientationIsPortrait(initialOrientation)) {
+                if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad || UIDeviceOrientationIsPortrait(initialOrientation)) {
                     frame.origin.y = -20;
                 }
                 
@@ -843,11 +833,11 @@ static NSMutableArray *allInstances;
     
     if ([menu isKindOfClass:[AMSlideMenuLeftTableViewController class]])
     {
-        [self.rightMenu.tableView deselectRowAtIndexPath:[self.rightMenu.tableView indexPathForSelectedRow] animated:NO];
+//        [self.rightMenu.tableView deselectRowAtIndexPath:[self.rightMenu.tableView indexPathForSelectedRow] animated:NO];
     }
     else if ([menu isKindOfClass:[AMSlideMenuRightTableViewController class]])
     {
-        [self.leftMenu.tableView deselectRowAtIndexPath:[self.leftMenu.tableView indexPathForSelectedRow] animated:NO];
+//        [self.leftMenu.tableView deselectRowAtIndexPath:[self.leftMenu.tableView indexPathForSelectedRow] animated:NO];
     }
 }
 
@@ -858,7 +848,7 @@ static NSMutableArray *allInstances;
         if (!self.leftMenu)
             return;
         
-        [self.leftMenu.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+//        [self.leftMenu.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
         
         if ([self respondsToSelector:@selector(navigationControllerForIndexPathInLeftMenu:)]) {
             UINavigationController *navController = [self navigationControllerForIndexPathInLeftMenu:indexPath];
@@ -874,7 +864,7 @@ static NSMutableArray *allInstances;
         if (!self.rightMenu)
             return;
         
-        [self.rightMenu.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+//        [self.rightMenu.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
         
         if ([self respondsToSelector:@selector(navigationControllerForIndexPathInRightMenu:)]) {
             UINavigationController *navController = [self navigationControllerForIndexPathInRightMenu:indexPath];
@@ -1105,7 +1095,7 @@ static NSMutableArray *allInstances;
         
         if (self.menuState == AMSlideMenuLeftOpened)
         {
-            if (fabs(translation.x) > kPanMinTranslationX && translation.x < 0)
+            if (abs(translation.x) > kPanMinTranslationX && translation.x < 0)
             {
                 [self closeLeftMenu];
             }
@@ -1118,7 +1108,7 @@ static NSMutableArray *allInstances;
         }
         else if (self.menuState == AMSlideMenuRightOpened)
         {
-            if (fabs(translation.x) > kPanMinTranslationX && translation.x > 0)
+            if (abs(translation.x) > kPanMinTranslationX && translation.x > 0)
             {
                 [self closeRightMenu];
             }
@@ -1134,7 +1124,7 @@ static NSMutableArray *allInstances;
         {
             if (panningState == AMSlidePanningStateRight && self.leftMenu)
             {
-                if (fabs(translation.x) > kPanMinTranslationX && translation.x > 0)
+                if (abs(translation.x) > kPanMinTranslationX && translation.x > 0)
                 {
                     [self openLeftMenu];
                 }
@@ -1147,7 +1137,7 @@ static NSMutableArray *allInstances;
             }
             else if (panningState == AMSlidePanningStateLeft  && self.rightMenu)
             {
-                if (fabs(translation.x) > kPanMinTranslationX && translation.x < 0)
+                if (abs(translation.x) > kPanMinTranslationX && translation.x < 0)
                 {
                     [self openRightMenu];
                 }
@@ -1219,7 +1209,7 @@ static NSMutableArray *allInstances;
     {
         if (self.statusBarView)
         {
-            self.statusBarView.layer.opacity = 1 - fabs(panningView.frame.origin.x) / [self rightMenuWidth];
+            self.statusBarView.layer.opacity = 1 - abs(panningView.frame.origin.x) / [self rightMenuWidth];
         }
     }
     /********************************************* STATUS BAR FIX *******************************************************/
@@ -1233,7 +1223,7 @@ static NSMutableArray *allInstances;
     }
     else if(menu == AMSlideMenuRight)
     {
-        CGFloat alpha = [self maxDarknessWhileRightMenu] * (fabs(panningView.frame.origin.x) / [self rightMenuWidth]);
+        CGFloat alpha = [self maxDarknessWhileRightMenu] * (abs(panningView.frame.origin.x) / [self rightMenuWidth]);
         
         self.darknessView.alpha = alpha;
     }
